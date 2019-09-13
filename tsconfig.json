@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2016",
+        "outDir": "./dist",
+        "declaration": true,
+        "strict": true,
+        "jsx": "preserve"
+    },
+    "exclude": [
+        "dist",
+        "node_modules",
+        "**/node_modules/*"
+    ]
+}
