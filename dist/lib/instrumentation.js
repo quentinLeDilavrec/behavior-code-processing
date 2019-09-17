@@ -6,14 +6,12 @@ function constructNodejsPlugin(pluginObjFct, acc) {
         const pluginObj = pluginObjFct(b, { type: "nodejs" });
         const pre = pluginObj.pre, post = pluginObj.post;
         pluginObj.pre = function () {
-            this.cache = [];
+            this.store = function (key, value) { acc.set(key, value); };
             !pre || pre.call(this, arguments);
         };
-        pluginObj.post = function () {
-            !post || post.call(this, arguments);
-            console.log(this.cache);
-            acc.push(...this.cache);
-        };
+        // pluginObj.post = function () {
+        //     !post || post.call(this, arguments)
+        // }
         return pluginObj;
     };
 }
@@ -23,14 +21,12 @@ function constructBrowsersPlugin(pluginObjFct, acc) {
         const pluginObj = pluginObjFct(b, { type: "browser" });
         const pre = pluginObj.pre, post = pluginObj.post;
         pluginObj.pre = function () {
-            this.cache = [];
+            this.store = function (key, value) { acc.set(key, value); };
             !pre || pre.call(this, arguments);
         };
-        pluginObj.post = function () {
-            !post || post.call(this, arguments);
-            console.log(this.cache);
-            acc.push(...this.cache);
-        };
+        // pluginObj.post = function () {
+        //     !post || post.call(this, arguments)
+        // }
         return pluginObj;
     };
 }
@@ -40,14 +36,12 @@ function constructExtensionPlugin(pluginObjFct, acc) {
         const pluginObj = pluginObjFct(b, { type: "extension" });
         const pre = pluginObj.pre, post = pluginObj.post;
         pluginObj.pre = function () {
-            this.cache = [];
+            this.store = function (key, value) { acc.set(key, value); };
             !pre || pre.call(this, arguments);
         };
-        pluginObj.post = function () {
-            !post || post.call(this, arguments);
-            console.log(this.cache);
-            acc.push(...this.cache);
-        };
+        // pluginObj.post = function () {
+        //     !post || post.call(this, arguments)
+        // }
         return pluginObj;
     };
 }

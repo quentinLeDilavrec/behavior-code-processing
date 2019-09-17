@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const type_1 = require("../lib/type");
+const index_1 = require("../lib/index");
 function getLocation(node, srcName) {
     const loc = node.loc; // TODO look at this.file.opts.filename if it works
     if (loc) {
@@ -13,7 +13,7 @@ function getLocation(node, srcName) {
 }
 function default_1({ types: t }, behaviorContext) {
     const fs = require("fs");
-    const makeLoggerExpr = type_1.makeLoggerExprGen(';global.logger.push'); //';window.logger'
+    const makeLoggerExpr = index_1.makeLoggerExprGen(';global.logger.push'); //';window.logger'
     return {
         pre(state) {
             this.counter = 0;
@@ -35,9 +35,9 @@ function default_1({ types: t }, behaviorContext) {
                 ? {
                     ArrowFunctionExpression(path) {
                         const loc = getLocation(path.node, this.file.opts.filename);
-                        this.cache.push([loc, path]);
+                        this.store(loc, path);
                         this.counter++;
-                        const v = makeLoggerExpr(loc, ...path.node.params.map(type_1.param2exp));
+                        const v = makeLoggerExpr(loc, ...path.node.params.map(index_1.param2exp));
                         if (path.node.body.type === 'BlockStatement') {
                             path.node.body.body.unshift(v);
                         }

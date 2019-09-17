@@ -12,4 +12,4 @@ exports.default = (process.argv &&
     process.argv[1] !== dir + '/node_modules/jest-worker/build/workers/processChild.js' &&
     process.argv[1] !== dir + '/packages/scripts/scripts/test-unit-js.js') ?
     function () { return {}; } :
-    instrumentation_1.constructNodejsPlugin(example_behavior_plugin_made_by_user_1.default, []);
+    instrumentation_1.constructNodejsPlugin(example_behavior_plugin_made_by_user_1.default, new Map());
