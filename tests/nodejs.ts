@@ -11,4 +11,4 @@ export default (process.argv &&
     process.argv[1] !== dir + '/node_modules/jest-worker/build/workers/processChild.js' &&
     process.argv[1] !== dir + '/packages/scripts/scripts/test-unit-js.js') ?
     function () { return {}; } :
-    constructNodejsPlugin(f, []);
+    constructNodejsPlugin(f, new Map());

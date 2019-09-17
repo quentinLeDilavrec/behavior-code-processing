@@ -1,6 +1,6 @@
 import * as Babel from "@babel/core";
 import { NodePath, types as bt } from "@babel/core";
-import { BehaviorAnalysisContext, ExtendedPluginObj, param2exp, makeLoggerExprGen, SerializedLoc } from "../lib/type";
+import { BehaviorAnalysisContext, ExtendedPluginObj, param2exp, makeLoggerExprGen, SerializedLoc } from "../lib/index";
 
 function getLocation(node: bt.Function, srcName: string): SerializedLoc { // TODO check if it is portable
     const loc = node.loc; // TODO look at this.file.opts.filename if it works
@@ -39,7 +39,7 @@ export default function ({ types: t }: typeof Babel, behaviorContext: BehaviorAn
                 ? {
                     ArrowFunctionExpression(path: NodePath<bt.ArrowFunctionExpression>) {
                         const loc = getLocation(path.node, this.file.opts.filename)
-                        this.cache.push([loc, path]);
+                        this.store(loc, path);
                         this.counter++
                         const v = makeLoggerExpr(
                             loc,

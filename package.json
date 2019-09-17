@@ -3,23 +3,24 @@
   "version": "1.0.0",
   "description": "logic used to process code for behavior analysis",
   "main": "dist/index.ts",
-  "types" : "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
   "author": "quentin le dilavrec",
   "dependencies": {
-    "@babel/traverse": "^7.4.4",
-    "@babel/types": "^7.4.4",
-    "@types/babel__core": "^7.1.2",
-    "babel-cli": "^6.26.0",
+    "@babel/traverse": "7.4.4",
+    "@babel/types": "7.4.4",
+    "@types/babel__core": "7.1.2",
+    "babel-cli": "6.26.0",
     "babel-node": "0.0.1-security",
-    "vscode": "^1.1.28"
+    "jest-environment-jsdom": "^24.9.0",
+    "vscode": "^1.1.36"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.4",
-    "@babel/node": "^7.2.2",
-    "@types/node": "^12.7.4",
-    "typescript": "^3.4.5"
+    "@babel/core": "7.4.4",
+    "@babel/node": "7.2.2",
+    "@types/node": "12.7.4",
+    "typescript": "3.4.5"
   }
 }
