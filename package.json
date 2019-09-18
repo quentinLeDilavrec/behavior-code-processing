@@ -2,8 +2,8 @@
   "name": "behavior-code-processing",
   "version": "1.0.0",
   "description": "logic used to process code for behavior analysis",
-  "main": "dist/lib/index.ts",
-  "types": "dist/lib/index.d.ts",
+  "main": "out/index.ts",
+  "types": "out/index.d.ts",
   "scripts": {
     "compile": "tsc"
   },
