@@ -2,7 +2,7 @@
   "name": "behavior-code-processing",
   "version": "1.0.0",
   "description": "logic used to process code for behavior analysis",
-  "main": "out/index.ts",
+  "main": "out/index.js",
   "types": "out/index.d.ts",
   "scripts": {
     "compile": "tsc"
