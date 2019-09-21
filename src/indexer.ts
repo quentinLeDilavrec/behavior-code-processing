@@ -127,7 +127,7 @@ export class Indexer<T extends t.Node=t.Node> {
             const acc = new Map();
             // const a = constructExtensionPlugin<T>(this.raw_plugin, acc)
             this.plugin = this.plugin || (this.index = undefined, constructExtensionPlugin<T>(this.raw_plugin, acc)(Babel))
-            const tO: TransformOptions = { plugins: ['typescript', 'jsx', this.plugin], sourceType: 'module',filename: this.document.fileName}
+            const tO: TransformOptions = { plugins: [this.plugin], sourceType: 'module',filename: this.document.fileName}
             // this.plugin.pre && this.plugin.pre({} as any)
             // await traverse(ast, tO);
             await transformFromAstAsync(ast, this.document.getText(), tO)
