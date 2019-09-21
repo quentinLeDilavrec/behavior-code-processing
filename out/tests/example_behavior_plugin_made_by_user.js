@@ -11,9 +11,8 @@ function getLocation(node, srcName) {
         return ((srcName[0] !== '/') ? srcName : srcName.split('/').slice(3).join('/'));
     }
 }
-function default_1({ types: t }, behaviorContext) {
-    const fs = require("fs");
-    const makeLoggerExpr = index_1.makeLoggerExprGen(';global.logger.push'); //';window.logger'
+function extendedPlugin({ types: t }, behaviorContext) {
+    const makeLoggerExpr = index_1.makeLoggerExprGen(behaviorContext.type === "browser" ? ';window.logger' : ';global.logger.push');
     return {
         pre(state) {
             this.counter = 0;
@@ -22,13 +21,12 @@ function default_1({ types: t }, behaviorContext) {
             ? {
                 // @ts-ignore
                 "ArrowFunctionExpression|FunctionDeclaration|FunctionExpression|ObjectMethod|ClassMethod|ClassPrivateMethod"(path) {
+                    const loc = getLocation(path.node, 
                     // @ts-ignore
-                    const loc = getLocation(path.node, this.file.opts.filename);
+                    this.file.opts.filename);
                     console.log(this);
                     // @ts-ignore
-                    this.counter++;
-                    // @ts-ignore
-                    this.cache.push([loc, path]);
+                    this.store(loc, path);
                 }
             }
             : behaviorContext.type === "nodejs"
@@ -75,5 +73,21 @@ function default_1({ types: t }, behaviorContext) {
         }
     };
 }
-exports.default = default_1;
+exports.extendedPlugin = extendedPlugin;
+// const dir = __dirname.split(/\//g).slice(0, -2).join('/');
+// // NOTE make sure that the instrumentation is done only one time.
+// // one could look a the ast to detect such double instrumentation but considering transformations in between each pass makes it non-trivial.
+// export default (process.argv &&
+//     process.argv[1] !== dir + '/node_modules/.bin/babel' &&
+//     process.argv[1] !== dir + '/bin/packages/build.js' &&
+//     process.argv[1] !== dir + '/node_modules/worker-farm/lib/child/index.js' &&
+//     process.argv[1] !== dir + '/node_modules/jest-worker/build/workers/processChild.js' &&
+//     process.argv[1] !== dir + '/packages/scripts/scripts/test-unit-js.js') ?
+//     function () { return {}; } :
+//     constructNodejsPlugin(extendedPlugin,(locations)=>{
+//         console.log(locations.keys());
+//     });
+exports.default = index_1.constructNodejsPlugin(extendedPlugin, (locations) => {
+    console.log(locations.keys());
+});
 //# sourceMappingURL=example_behavior_plugin_made_by_user.js.map
