@@ -9,6 +9,8 @@
   },
   "author": "quentin le dilavrec",
   "dependencies": {
+    "@babel/plugin-syntax-jsx": "^7.2.0",
+    "@babel/plugin-syntax-typescript": "^7.3.3",
     "@babel/traverse": "7.4.4",
     "@babel/types": "7.4.4",
     "@types/babel__core": "7.1.2",

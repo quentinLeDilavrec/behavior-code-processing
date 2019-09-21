@@ -1,6 +1,6 @@
 import * as Babel from "@babel/core";
 import { NodePath, types as bt } from "@babel/core";
-import { BehaviorAnalysisContext, ExtendedPluginObj, param2exp, makeLoggerExprGen, SerializedLoc } from "../index";
+import { BehaviorAnalysisContext, ExtendedPluginObj, param2exp, makeLoggerExprGen, SerializedLoc, constructNodejsPlugin } from "../index";
 
 function getLocation(node: bt.Function, srcName: string): SerializedLoc { // TODO check if it is portable
     const loc = node.loc; // TODO look at this.file.opts.filename if it works
@@ -12,9 +12,8 @@ function getLocation(node: bt.Function, srcName: string): SerializedLoc { // TOD
     }
 }
 
-export default function ({ types: t }: typeof Babel, behaviorContext: BehaviorAnalysisContext): ExtendedPluginObj<{ counter: number, file: any }> {
-    const fs = require("fs");
-    const makeLoggerExpr = makeLoggerExprGen(';global.logger.push')//';window.logger'
+export function extendedPlugin({ types: t }: typeof Babel, behaviorContext: BehaviorAnalysisContext): ExtendedPluginObj<{ counter: number, file: any }> {
+    const makeLoggerExpr = makeLoggerExprGen(behaviorContext.type === "browser" ? ';window.logger' : ';global.logger.push');
     return {
         pre(state) {
             this.counter = 0
@@ -24,15 +23,12 @@ export default function ({ types: t }: typeof Babel, behaviorContext: BehaviorAn
                 // @ts-ignore
                 "ArrowFunctionExpression|FunctionDeclaration|FunctionExpression|ObjectMethod|ClassMethod|ClassPrivateMethod"(
                     path: NodePath<bt.Function>) {
-                    // @ts-ignore
-                    const loc = getLocation(path.node, this.file.opts.filename)
+                    const loc = getLocation(path.node,
+                        // @ts-ignore
+                        this.file.opts.filename)
                     console.log(this)
-
                     // @ts-ignore
-                    this.counter++
-
-                    // @ts-ignore
-                    this.cache.push([loc, path]);
+                    this.store(loc, path);
                 }
             }
             : behaviorContext.type === "nodejs"
@@ -88,3 +84,19 @@ export default function ({ types: t }: typeof Babel, behaviorContext: BehaviorAn
     };
 }
 
+// const dir = __dirname.split(/\//g).slice(0, -2).join('/');
+// // NOTE make sure that the instrumentation is done only one time.
+// // one could look a the ast to detect such double instrumentation but considering transformations in between each pass makes it non-trivial.
+// export default (process.argv &&
+//     process.argv[1] !== dir + '/node_modules/.bin/babel' &&
+//     process.argv[1] !== dir + '/bin/packages/build.js' &&
+//     process.argv[1] !== dir + '/node_modules/worker-farm/lib/child/index.js' &&
+//     process.argv[1] !== dir + '/node_modules/jest-worker/build/workers/processChild.js' &&
+//     process.argv[1] !== dir + '/packages/scripts/scripts/test-unit-js.js') ?
+//     function () { return {}; } :
+//     constructNodejsPlugin(extendedPlugin,(locations)=>{
+//         console.log(locations.keys());
+//     });
+export default constructNodejsPlugin(extendedPlugin, (locations) => {
+    console.log(locations.keys());
+});

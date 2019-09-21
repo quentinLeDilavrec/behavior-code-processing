@@ -33,6 +33,6 @@ module.exports = {
 	],
 	testEnvironment: '<rootDir>/behavior_environment.js', // NOTE here is the path to the Environment in charge of writing traces to disk you can load it with `require("behavior-code-processing").environment`
 	testEnvironmentOptions: {
-		output_dir: '/tmp/behaviorlogs/' // NOTE directory where traces will be saved
+		output_dir: '/tmp/behavior_traces/unittest' // NOTE directory where traces will be saved
 	},
 };

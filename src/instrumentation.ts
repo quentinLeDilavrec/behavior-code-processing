@@ -7,7 +7,9 @@ import { BehaviorAnalysisContext, ExtendedPluginObj } from "./types";
 // browser, nodejs, extension
 export function constructNodejsPlugin<T>(
     pluginObjFct: ({ types: t }: typeof Babel, ctx: BehaviorAnalysisContext) => ExtendedPluginObj<T>,
-    acc: Map<SerializedLoc, NodePath>) {
+    end_of_instrumentation?:(accumulator:Map<SerializedLoc, NodePath>)=>void
+) {
+    const acc: Map<SerializedLoc, NodePath> = new Map()
     return function (b: typeof Babel): ExtendedPluginObj<T> {
         const pluginObj = pluginObjFct(b, { type: "nodejs" })
         const pre = pluginObj.pre, post = pluginObj.post
@@ -15,15 +17,16 @@ export function constructNodejsPlugin<T>(
             this.store = function (key, value) { acc.set(key, value) }
             !pre || pre.call(this, arguments)
         }
-        // pluginObj.post = function () {
-        //     !post || post.call(this, arguments)
-        // }
+        pluginObj.post = function () {
+            !post || post.call(this, arguments);
+            !end_of_instrumentation || end_of_instrumentation(acc);
+        }
         return pluginObj
     }
 }
 export function constructBrowsersPlugin<T>(
     pluginObjFct: ({ types: t }: typeof Babel, ctx: BehaviorAnalysisContext) => ExtendedPluginObj<T>,
-    acc: Map<SerializedLoc, NodePath>) {
+    acc: Map<SerializedLoc, NodePath> = new Map()) {
     return function (b: typeof Babel): ExtendedPluginObj<T> {
         const pluginObj = pluginObjFct(b, { type: "browser" })
         const pre = pluginObj.pre, post = pluginObj.post
@@ -39,7 +42,7 @@ export function constructBrowsersPlugin<T>(
 }
 export function constructExtensionPlugin<T>(
     pluginObjFct: ({ types: t }: typeof Babel, ctx: BehaviorAnalysisContext) => ExtendedPluginObj<T>,
-    acc: Map<SerializedLoc, NodePath>) {
+    acc: Map<SerializedLoc, NodePath> = new Map()) {
     return function (b: typeof Babel): ExtendedPluginObj<T> {
         const pluginObj = pluginObjFct(b, { type: "extension" })
         const pre = pluginObj.pre, post = pluginObj.post
