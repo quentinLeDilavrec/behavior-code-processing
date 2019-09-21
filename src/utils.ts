@@ -75,7 +75,7 @@ export function parseLoc(id: SerializedLoc): Location {
       Uri.parse(exploded[0]),
       new Position(parseInt(exploded[1]), parseInt(exploded[2])));
   }
-  if (exploded.length = 3) {
+  if (exploded.length = 4) {
     return new Location(
       Uri.parse(exploded[0] + ':' + exploded[1]),
       new Position(parseInt(exploded[2]), parseInt(exploded[3])));
