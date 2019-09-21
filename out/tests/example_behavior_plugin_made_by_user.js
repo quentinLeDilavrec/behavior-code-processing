@@ -4,11 +4,11 @@ const index_1 = require("../index");
 function getLocation(node, srcName) {
     const loc = node.loc; // TODO look at this.file.opts.filename if it works
     if (loc) {
-        return ((srcName[0] !== '/') ? srcName : srcName.split('/').slice(3).join('/')) + ':' + loc.start.line + ':' + loc.start.column + ':' + loc.end.line + ':' + loc.end.column;
+        return srcName + ':' + loc.start.line + ':' + loc.start.column + ':' + loc.end.line + ':' + loc.end.column;
     }
     else {
         console.error("current node don't possess a location");
-        return ((srcName[0] !== '/') ? srcName : srcName.split('/').slice(3).join('/'));
+        return srcName;
     }
 }
 function extendedPlugin({ types: t }, behaviorContext) {
