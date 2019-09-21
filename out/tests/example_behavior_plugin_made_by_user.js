@@ -20,11 +20,10 @@ function extendedPlugin({ types: t }, behaviorContext) {
         visitor: (behaviorContext.type === "extension"
             ? {
                 // @ts-ignore
-                "ArrowFunctionExpression|FunctionDeclaration|FunctionExpression|ObjectMethod|ClassMethod|ClassPrivateMethod"(path) {
+                Function(path) {
                     const loc = getLocation(path.node, 
                     // @ts-ignore
                     this.file.opts.filename);
-                    console.log(this);
                     // @ts-ignore
                     this.store(loc, path);
                 }
@@ -48,7 +47,7 @@ function extendedPlugin({ types: t }, behaviorContext) {
                         // @ts-ignore
                         const loc = getLocation(path.node, this.file.opts.filename);
                         // @ts-ignore
-                        this.cache.push([loc, path]);
+                        this.store(loc, path);
                         // @ts-ignore
                         this.counter++;
                         // TODO check if another logger call in same block or children which doesn't go though function declarations
