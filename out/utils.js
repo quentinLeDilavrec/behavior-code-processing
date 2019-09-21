@@ -67,7 +67,7 @@ function parseLoc(id) {
     if (exploded.length = 3) {
         return new vscode_1.Location(vscode_1.Uri.parse(exploded[0]), new vscode_1.Position(parseInt(exploded[1]), parseInt(exploded[2])));
     }
-    if (exploded.length = 3) {
+    if (exploded.length = 4) {
         return new vscode_1.Location(vscode_1.Uri.parse(exploded[0] + ':' + exploded[1]), new vscode_1.Position(parseInt(exploded[2]), parseInt(exploded[3])));
     }
     if (exploded.length = 5) {
