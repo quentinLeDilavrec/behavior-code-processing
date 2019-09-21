@@ -2,16 +2,16 @@ import * as Babel from "@babel/core";
 import { NodePath, types as bt } from "@babel/core";
 import { BehaviorAnalysisContext, ExtendedPluginObj, param2exp, makeLoggerExprGen, SerializedLoc, constructNodejsPlugin } from "../index";
 
-function getLocation(node: bt.Function, srcName: string): SerializedLoc { // TODO check if it is portable
+function getLocation(node: bt.Node, srcName: string) {
     const loc = node.loc; // TODO look at this.file.opts.filename if it works
     if (loc) {
-        return ((srcName[0] !== '/') ? srcName : srcName.split('/').slice(3).join('/')) + ':' + loc.start.line + ':' + loc.start.column + ':' + loc.end.line + ':' + loc.end.column;
-    } else {
-        console.error("current node don't possess a location")
-        return ((srcName[0] !== '/') ? srcName : srcName.split('/').slice(3).join('/'))
+        return srcName + ':' + loc.start.line + ':' + loc.start.column + ':' + loc.end.line + ':' + loc.end.column;
+    }
+    else {
+        console.error("current node don't possess a location");
+        return srcName;
     }
 }
-
 export function extendedPlugin({ types: t }: typeof Babel, behaviorContext: BehaviorAnalysisContext): ExtendedPluginObj<{ counter: number, file: any }> {
     const makeLoggerExpr = makeLoggerExprGen(behaviorContext.type === "browser" ? ';window.logger' : ';global.logger.push');
     return {
