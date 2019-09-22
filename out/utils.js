@@ -65,13 +65,13 @@ function parseLoc(id) {
         throw new Error("no Range in " + id);
     }
     if (exploded.length = 3) {
-        return new vscode_1.Location(vscode_1.Uri.parse(exploded[0]), new vscode_1.Position(parseInt(exploded[1]), parseInt(exploded[2])));
+        return new vscode_1.Location(vscode_1.Uri.file(exploded[0]), new vscode_1.Position(parseInt(exploded[1]), parseInt(exploded[2])));
     }
     if (exploded.length = 4) {
-        return new vscode_1.Location(vscode_1.Uri.parse(exploded[0] + ':' + exploded[1]), new vscode_1.Position(parseInt(exploded[2]), parseInt(exploded[3])));
+        return new vscode_1.Location(vscode_1.Uri.file(exploded[0] + ':' + exploded[1]), new vscode_1.Position(parseInt(exploded[2]), parseInt(exploded[3])));
     }
     if (exploded.length = 5) {
-        return new vscode_1.Location(vscode_1.Uri.parse(exploded[0]), new vscode_1.Range(new vscode_1.Position(parseInt(exploded[1]), parseInt(exploded[2])), new vscode_1.Position(parseInt(exploded[3]), parseInt(exploded[4]))));
+        return new vscode_1.Location(vscode_1.Uri.file(exploded[0]), new vscode_1.Range(new vscode_1.Position(parseInt(exploded[1]), parseInt(exploded[2])), new vscode_1.Position(parseInt(exploded[3]), parseInt(exploded[4]))));
     }
     if (exploded.length < 5) {
         throw new Error("missing Positions");
@@ -80,9 +80,9 @@ function parseLoc(id) {
         throw new Error("to much separator in " + id);
     }
     if (exploded.length = 6) {
-        return new vscode_1.Location(vscode_1.Uri.parse(exploded[0] + ':' + exploded[1]), new vscode_1.Range(new vscode_1.Position(parseInt(exploded[2]), parseInt(exploded[3])), new vscode_1.Position(parseInt(exploded[4]), parseInt(exploded[5]))));
+        return new vscode_1.Location(vscode_1.Uri.file(exploded[0] + ':' + exploded[1]), new vscode_1.Range(new vscode_1.Position(parseInt(exploded[2]), parseInt(exploded[3])), new vscode_1.Position(parseInt(exploded[4]), parseInt(exploded[5]))));
     }
-    return new vscode_1.Location(vscode_1.Uri.parse(exploded[0]), new vscode_1.Range(new vscode_1.Position(parseInt(exploded[1]), parseInt(exploded[2])), new vscode_1.Position(parseInt(exploded[3]), parseInt(exploded[4]))));
+    return new vscode_1.Location(vscode_1.Uri.file(exploded[0]), new vscode_1.Range(new vscode_1.Position(parseInt(exploded[1]), parseInt(exploded[2])), new vscode_1.Position(parseInt(exploded[3]), parseInt(exploded[4]))));
 }
 exports.parseLoc = parseLoc;
 function serializeLoc(loc) {

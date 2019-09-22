@@ -72,17 +72,17 @@ export function parseLoc(id: SerializedLoc): Location {
   }
   if (exploded.length = 3) {
     return new Location(
-      Uri.parse(exploded[0]),
+      Uri.file(exploded[0]),
       new Position(parseInt(exploded[1]), parseInt(exploded[2])));
   }
   if (exploded.length = 4) {
     return new Location(
-      Uri.parse(exploded[0] + ':' + exploded[1]),
+      Uri.file(exploded[0] + ':' + exploded[1]),
       new Position(parseInt(exploded[2]), parseInt(exploded[3])));
   }
   if (exploded.length = 5) {
     return new Location(
-      Uri.parse(exploded[0]), new Range(
+      Uri.file(exploded[0]), new Range(
         new Position(parseInt(exploded[1]), parseInt(exploded[2])),
         new Position(parseInt(exploded[3]), parseInt(exploded[4]))));
   }
@@ -94,12 +94,12 @@ export function parseLoc(id: SerializedLoc): Location {
   }
   if (exploded.length = 6) {
     return new Location(
-      Uri.parse(exploded[0] + ':' + exploded[1]), new Range(
+      Uri.file(exploded[0] + ':' + exploded[1]), new Range(
         new Position(parseInt(exploded[2]), parseInt(exploded[3])),
         new Position(parseInt(exploded[4]), parseInt(exploded[5]))));
   }
   return new Location(
-    Uri.parse(exploded[0]), new Range(
+    Uri.file(exploded[0]), new Range(
       new Position(parseInt(exploded[1]), parseInt(exploded[2])),
       new Position(parseInt(exploded[3]), parseInt(exploded[4]))));
 }
