@@ -111,7 +111,7 @@ export class Indexer<T extends t.Node=t.Node> {
         let acc = this.index || new Map();
         return new Promise<File>((resolve, reject) => {
             try {
-                resolve(parse(document.getText(), { sourceFilename: document.fileName, sourceType: 'module', plugins: ['typescript', 'jsx'],startLine:1 }));
+                resolve(parse(document.getText(), { sourceFilename: document.fileName, sourceType: 'module', plugins: ['typescript', 'jsx'],startLine:0 }));
             } catch (e) {
                 console.error(e); // TODO look at reject for parsing error when modifications are done on the code
             }
