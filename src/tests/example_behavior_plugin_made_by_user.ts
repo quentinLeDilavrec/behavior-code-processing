@@ -1,6 +1,9 @@
 import * as Babel from "@babel/core";
 import { NodePath, types as bt } from "@babel/core";
-import { BehaviorAnalysisContext, ExtendedPluginObj, param2exp, makeLoggerExprGen, SerializedLoc, constructNodejsPlugin } from "../index";
+import { BehaviorAnalysisContext, ExtendedPluginObj, param2exp, SerializedLoc, constructNodejsPlugin } from "../index";
+
+// TODO compile it as self contained (webpack?)
+
 
 function getLocation(node: bt.Node, srcName: string) {
     const loc = node.loc; // TODO look at this.file.opts.filename if it works
@@ -12,6 +15,26 @@ function getLocation(node: bt.Node, srcName: string) {
         return srcName;
     }
 }
+
+
+/**
+ * 
+ * @param pusher_identifier the identifer of the function used to log events
+ * @param current_file location of the current file
+ * @param parameters of the call
+ */
+export const makeLoggerExprGen = (pusher_identifier: string) =>
+  (current_file: SerializedLoc, ...parameters: (bt.Expression | bt.SpreadElement)[]) => {
+    return bt.expressionStatement(
+      bt.callExpression(bt.identifier(pusher_identifier), [
+        bt.arrayExpression([
+          bt.stringLiteral(current_file),
+          ...parameters,
+        ]),
+      ])
+    );
+  }
+
 export function extendedPlugin({ types: t }: typeof Babel, behaviorContext: BehaviorAnalysisContext): ExtendedPluginObj<{ counter: number, file: any }> {
     const makeLoggerExpr = makeLoggerExprGen(behaviorContext.type === "browser" ? ';window.logger' : ';global.logger.push');
     return {
