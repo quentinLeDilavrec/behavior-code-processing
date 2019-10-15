@@ -1,7 +1,7 @@
 
 import { types as t, NodePath } from "@babel/core";
 import { SerializedLoc } from "./types";
-import { Location, Uri, Range, Position } from "vscode";
+// import { Location, Uri, Range, Position } from "vscode";
 
 /**
  * Transform a parameter into an Expression
@@ -53,70 +53,6 @@ export const makeLoggerExprGen = (pusher_identifier: string) =>
       ])
     );
   }
-
-export function serializeNodePath(uri: Uri, path: NodePath): SerializedLoc {
-  if (path.node.loc === null)
-    throw new Error("There is no location in this node.");
-
-  return uri.toString(false) +
-    ':' + path.node.loc.start.line +
-    ':' + path.node.loc.start.column +
-    ':' + path.node.loc.end.line +
-    ':' + path.node.loc.end.column;
-}
-
-export function parseLoc(id: SerializedLoc): Location {
-  const exploded = id.split(/:/g)
-  if (exploded.length < 3) {
-    throw new Error("no Range in " + id);
-  }
-  if (exploded.length = 3) {
-    return new Location(
-      Uri.file(exploded[0]),
-      new Position(parseInt(exploded[1]), parseInt(exploded[2])));
-  }
-  if (exploded.length = 4) {
-    return new Location(
-      Uri.file(exploded[0] + ':' + exploded[1]),
-      new Position(parseInt(exploded[2]), parseInt(exploded[3])));
-  }
-  if (exploded.length = 5) {
-    return new Location(
-      Uri.file(exploded[0]), new Range(
-        new Position(parseInt(exploded[1]), parseInt(exploded[2])),
-        new Position(parseInt(exploded[3]), parseInt(exploded[4]))));
-  }
-  if (exploded.length < 5) {
-    throw new Error("missing Positions");
-  }
-  if (exploded.length > 6) {
-    throw new Error("to much separator in " + id);
-  }
-  if (exploded.length = 6) {
-    return new Location(
-      Uri.file(exploded[0] + ':' + exploded[1]), new Range(
-        new Position(parseInt(exploded[2]), parseInt(exploded[3])),
-        new Position(parseInt(exploded[4]), parseInt(exploded[5]))));
-  }
-  return new Location(
-    Uri.file(exploded[0]), new Range(
-      new Position(parseInt(exploded[1]), parseInt(exploded[2])),
-      new Position(parseInt(exploded[3]), parseInt(exploded[4]))));
-}
-export function serializeLoc(loc: Location): SerializedLoc {
-  return (loc.uri.toString(false)
-    + ':' + (loc.range.start.line)
-    + ':' + (loc.range.start.character)
-    + ':' + (loc.range.end.line)
-    + ':' + (loc.range.end.character));
-}
-
-export function nodePath2Range(path: NodePath): Range {
-  if (!path.node.loc) { throw new Error("no location in " + path); }
-  return new Range(
-    new Position(path.node.loc.start.line, path.node.loc.start.column),
-    new Position(path.node.loc.end.line, path.node.loc.end.column));
-}
 
 import { InterceptedCall } from "./types";
 

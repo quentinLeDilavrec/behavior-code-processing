@@ -11,7 +11,7 @@ import { writeFileSync, mkdirSync } from 'fs';
 import { call2String } from "./utils";
 import Environment from 'jest-environment-jsdom';
 /**
- * 
+ * Get the index of the n-th occurrence of c in s. c and elements of s are compared with === operator.
  * @param s array explore
  * @param c searched element 
  * @param n number of c elements to see  (n-1 c element will be ignored)
@@ -35,7 +35,6 @@ function nthOccIndex<T>(s: T[], c: T, n: number) {
 
 export class BehaviorEnvironment extends Environment {
 	output_dir:string;
-	// // eslint-disable-next-line no-useless-constructor
 	constructor(config: {output_dir:string}&Config.ProjectConfig, x: any) {
 		super(config, x);
 		this.output_dir=config.output_dir

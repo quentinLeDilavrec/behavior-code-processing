@@ -2,7 +2,9 @@
 import * as Babel from "@babel/core";
 import { SerializedLoc } from "./types";
 import { NodePath } from "@babel/traverse";
-import { BehaviorAnalysisContext, ExtendedPluginObj } from "./types";
+import { BehaviorAnalysisContext } from "./types";
+import { ExtendedPluginObj } from "./extended_pluginObj";
+
 
 // browser, nodejs, extension
 export function constructNodejsPlugin<T>(

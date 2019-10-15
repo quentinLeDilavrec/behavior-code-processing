@@ -8,24 +8,75 @@ import { existsSync, readFileSync, mkdir, mkdirSync, writeFileSync } from "fs";
 import { join } from "path";
 import { TextDocument, Location, Uri, Range, Position } from "vscode";
 import { SerializedLoc } from "./types";
-import { nodePath2Range, parseLoc, serializeLoc } from "./utils";
 import { constructExtensionPlugin } from "./instrumentation";
 import * as Babel from "@babel/core";
-import { BehaviorAnalysisContext, ExtendedPluginObj } from "./types";
+import { BehaviorAnalysisContext } from "./types";
+import { ExtendedPluginObj } from "./extended_pluginObj";
 import { TransformOptions, transformFromAstAsync } from "@babel/core";
 
-interface Mapping<T> { }
+export function serializeNodePath(uri: Uri, path: NodePath): SerializedLoc {
+    if (path.node.loc === null)
+        throw new Error("There is no location in this node.");
 
-// interface BehaviorInstrumentProvider {
-//     instrument(): { [nodeType: string]: (path: NodePath) => NodePath };
-// }
-// interface BehaviorDisplayProvider {
-//     display(): { [nodeType: string]: (path: NodePath) => NodePath };
-// }
+    return uri.toString(false) +
+        ':' + path.node.loc.start.line +
+        ':' + path.node.loc.start.column +
+        ':' + path.node.loc.end.line +
+        ':' + path.node.loc.end.column;
+}
 
-// function aaa() {
+export function parseLoc(id: SerializedLoc): Location {
+    const exploded = id.split(/:/g)
+    if (exploded.length < 3) {
+        throw new Error("no Range in " + id);
+    }
+    if (exploded.length = 3) {
+        return new Location(
+            Uri.file(exploded[0]),
+            new Position(parseInt(exploded[1]), parseInt(exploded[2])));
+    }
+    if (exploded.length = 4) {
+        return new Location(
+            Uri.file(exploded[0] + ':' + exploded[1]),
+            new Position(parseInt(exploded[2]), parseInt(exploded[3])));
+    }
+    if (exploded.length = 5) {
+        return new Location(
+            Uri.file(exploded[0]), new Range(
+                new Position(parseInt(exploded[1]), parseInt(exploded[2])),
+                new Position(parseInt(exploded[3]), parseInt(exploded[4]))));
+    }
+    if (exploded.length < 5) {
+        throw new Error("missing Positions");
+    }
+    if (exploded.length > 6) {
+        throw new Error("to much separator in " + id);
+    }
+    if (exploded.length = 6) {
+        return new Location(
+            Uri.file(exploded[0] + ':' + exploded[1]), new Range(
+                new Position(parseInt(exploded[2]), parseInt(exploded[3])),
+                new Position(parseInt(exploded[4]), parseInt(exploded[5]))));
+    }
+    return new Location(
+        Uri.file(exploded[0]), new Range(
+            new Position(parseInt(exploded[1]), parseInt(exploded[2])),
+            new Position(parseInt(exploded[3]), parseInt(exploded[4]))));
+}
+export function serializeLoc(loc: Location): SerializedLoc {
+    return (loc.uri.toString(false)
+        + ':' + (loc.range.start.line)
+        + ':' + (loc.range.start.character)
+        + ':' + (loc.range.end.line)
+        + ':' + (loc.range.end.character));
+}
 
-// }
+export function nodePath2Range(path: NodePath): Range {
+    if (!path.node.loc) { throw new Error("no location in " + path); }
+    return new Range(
+        new Position(path.node.loc.start.line, path.node.loc.start.column),
+        new Position(path.node.loc.end.line, path.node.loc.end.column));
+}
 
 // /**
 //  * Handle set of IndexerCollection
@@ -45,7 +96,7 @@ interface Mapping<T> { }
 /**
  * Handle set of FileIndexers
  */
-export class IndexerCollection<T extends t.Node=t.Node> {
+export class IndexerCollection<T extends t.Node = t.Node> {
     private Instantiated: Map<SerializedLoc, Indexer<T>> = new Map();
     public get(file_uri: Uri) {
         return (this.Instantiated.get(file_uri.toString(false))
@@ -57,7 +108,7 @@ export class IndexerCollection<T extends t.Node=t.Node> {
     constructor(private raw_plugin: ({ types: t }: typeof Babel, ctx: BehaviorAnalysisContext) => ExtendedPluginObj<T>) {
 
     }
-    public change_plugin(raw_plugin: ({ types: t }: typeof Babel, ctx: BehaviorAnalysisContext) => ExtendedPluginObj<T>){
+    public change_plugin(raw_plugin: ({ types: t }: typeof Babel, ctx: BehaviorAnalysisContext) => ExtendedPluginObj<T>) {
         throw new Error("Implementation not finished.")
         this.raw_plugin = raw_plugin
     }
@@ -67,7 +118,7 @@ export class IndexerCollection<T extends t.Node=t.Node> {
 /**
  * Index Locations in file given an extended babel plugin see `tests/example_behavior_*` and `tests/extension.ts`
  */
-export class Indexer<T extends t.Node=t.Node> {
+export class Indexer<T extends t.Node = t.Node> {
     // private static display_visitors: { [nodeType: string]: (path: NodePath) => NodePath } = {}
 
     private plugin?: ExtendedPluginObj<T>
@@ -111,7 +162,7 @@ export class Indexer<T extends t.Node=t.Node> {
         let acc = this.index || new Map();
         return new Promise<File>((resolve, reject) => {
             try {
-                resolve(parse(document.getText(), { sourceFilename: document.fileName, sourceType: 'module', plugins: ['typescript', 'jsx'],startLine:0 }));
+                resolve(parse(document.getText(), { sourceFilename: document.fileName, sourceType: 'module', plugins: ['typescript', 'jsx'], startLine: 0 }));
             } catch (e) {
                 console.error(e); // TODO look at reject for parsing error when modifications are done on the code
             }
@@ -127,7 +178,7 @@ export class Indexer<T extends t.Node=t.Node> {
             const acc = new Map();
             // const a = constructExtensionPlugin<T>(this.raw_plugin, acc)
             this.plugin = this.plugin || (this.index = undefined, constructExtensionPlugin<T>(this.raw_plugin, acc)(Babel))
-            const tO: TransformOptions = { plugins: [this.plugin], sourceType: 'module',filename: this.document.fileName}
+            const tO: TransformOptions = { plugins: [this.plugin], sourceType: 'module', filename: this.document.fileName }
             // this.plugin.pre && this.plugin.pre({} as any)
             // await traverse(ast, tO);
             await transformFromAstAsync(ast, this.document.getText(), tO)

@@ -2,7 +2,7 @@ import * as Babel from "@babel/core";
 import { NodePath, types as bt } from "@babel/core";
 import { BehaviorAnalysisContext, ExtendedPluginObj, param2exp, SerializedLoc, constructNodejsPlugin } from "../index";
 
-// TODO compile it as self contained (webpack?)
+// TODO compile it as self contained (webpack?), caution with deps
 
 
 function getLocation(node: bt.Node, srcName: string) {
