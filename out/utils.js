@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@babel/core");
-const vscode_1 = require("vscode");
 function param2exp(param) {
     if (core_1.types.isExpression(param)) {
         return param;
@@ -49,57 +48,6 @@ exports.makeLoggerExprGen = (pusher_identifier) => (current_file, ...parameters)
         ]),
     ]));
 };
-function serializeNodePath(uri, path) {
-    if (path.node.loc === null)
-        throw new Error("There is no location in this node.");
-    return uri.toString(false) +
-        ':' + path.node.loc.start.line +
-        ':' + path.node.loc.start.column +
-        ':' + path.node.loc.end.line +
-        ':' + path.node.loc.end.column;
-}
-exports.serializeNodePath = serializeNodePath;
-function parseLoc(id) {
-    const exploded = id.split(/:/g);
-    if (exploded.length < 3) {
-        throw new Error("no Range in " + id);
-    }
-    if (exploded.length = 3) {
-        return new vscode_1.Location(vscode_1.Uri.file(exploded[0]), new vscode_1.Position(parseInt(exploded[1]), parseInt(exploded[2])));
-    }
-    if (exploded.length = 4) {
-        return new vscode_1.Location(vscode_1.Uri.file(exploded[0] + ':' + exploded[1]), new vscode_1.Position(parseInt(exploded[2]), parseInt(exploded[3])));
-    }
-    if (exploded.length = 5) {
-        return new vscode_1.Location(vscode_1.Uri.file(exploded[0]), new vscode_1.Range(new vscode_1.Position(parseInt(exploded[1]), parseInt(exploded[2])), new vscode_1.Position(parseInt(exploded[3]), parseInt(exploded[4]))));
-    }
-    if (exploded.length < 5) {
-        throw new Error("missing Positions");
-    }
-    if (exploded.length > 6) {
-        throw new Error("to much separator in " + id);
-    }
-    if (exploded.length = 6) {
-        return new vscode_1.Location(vscode_1.Uri.file(exploded[0] + ':' + exploded[1]), new vscode_1.Range(new vscode_1.Position(parseInt(exploded[2]), parseInt(exploded[3])), new vscode_1.Position(parseInt(exploded[4]), parseInt(exploded[5]))));
-    }
-    return new vscode_1.Location(vscode_1.Uri.file(exploded[0]), new vscode_1.Range(new vscode_1.Position(parseInt(exploded[1]), parseInt(exploded[2])), new vscode_1.Position(parseInt(exploded[3]), parseInt(exploded[4]))));
-}
-exports.parseLoc = parseLoc;
-function serializeLoc(loc) {
-    return (loc.uri.toString(false)
-        + ':' + (loc.range.start.line)
-        + ':' + (loc.range.start.character)
-        + ':' + (loc.range.end.line)
-        + ':' + (loc.range.end.character));
-}
-exports.serializeLoc = serializeLoc;
-function nodePath2Range(path) {
-    if (!path.node.loc) {
-        throw new Error("no location in " + path);
-    }
-    return new vscode_1.Range(new vscode_1.Position(path.node.loc.start.line, path.node.loc.start.column), new vscode_1.Position(path.node.loc.end.line, path.node.loc.end.column));
-}
-exports.nodePath2Range = nodePath2Range;
 function replacer(depth = Number.MAX_SAFE_INTEGER) {
     let objects, stack, keys;
     return function (key, value) {

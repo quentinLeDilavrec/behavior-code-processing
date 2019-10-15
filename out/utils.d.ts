@@ -1,6 +1,4 @@
-import { types as t, NodePath } from "@babel/core";
-import { SerializedLoc } from "./types";
-import { Location, Uri, Range } from "vscode";
+import { types as t } from "@babel/core";
 /**
  * Transform a parameter into an Expression
  * @param param parameter given to a function
@@ -15,10 +13,6 @@ export declare function param2exp(param: t.LVal | t.Expression): t.Expression;
  * @param parameters of the call
  */
 export declare const makeLoggerExprGen: (pusher_identifier: string) => (current_file: string, ...parameters: (t.ArrayExpression | t.ArrowFunctionExpression | t.AssignmentExpression | t.AwaitExpression | t.BigIntLiteral | t.BinaryExpression | t.LogicalExpression | t.BindExpression | t.FunctionExpression | t.BooleanLiteral | t.CallExpression | t.ClassExpression | t.ConditionalExpression | t.DoExpression | t.Identifier | t.StringLiteral | t.NumericLiteral | t.NullLiteral | t.RegExpLiteral | t.MemberExpression | t.NewExpression | t.ObjectExpression | t.SequenceExpression | t.ParenthesizedExpression | t.ThisExpression | t.UnaryExpression | t.UpdateExpression | t.MetaProperty | t.Super | t.TaggedTemplateExpression | t.TemplateLiteral | t.YieldExpression | t.TypeCastExpression | t.JSXElement | t.JSXFragment | t.OptionalMemberExpression | t.PipelinePrimaryTopicReference | t.OptionalCallExpression | t.Import | t.TSAsExpression | t.TSTypeAssertion | t.TSNonNullExpression | t.SpreadElement)[]) => t.ExpressionStatement;
-export declare function serializeNodePath(uri: Uri, path: NodePath): SerializedLoc;
-export declare function parseLoc(id: SerializedLoc): Location;
-export declare function serializeLoc(loc: Location): SerializedLoc;
-export declare function nodePath2Range(path: NodePath): Range;
 import { InterceptedCall } from "./types";
 /**
  * transform a call into a string

@@ -10,11 +10,3 @@ export declare type SerializedLoc = string;
 export declare type BehaviorAnalysisContext = {
     type: 'browser' | 'nodejs' | 'extension';
 };
-import { PluginObj } from "@babel/core";
-import { NodePath } from "@babel/traverse";
-/**
- * Extent the basic babel `PluginObject` with a cache that collect the id and path of instrumented pieces of code
- */
-export declare type ExtendedPluginObj<T> = PluginObj<{
-    store: (key: SerializedLoc, value: NodePath) => void;
-} & T>;

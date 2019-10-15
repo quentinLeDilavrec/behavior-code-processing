@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = require("@babel/core");
 const index_1 = require("../index");
+// TODO compile it as self contained (webpack?), caution with deps
 function getLocation(node, srcName) {
     const loc = node.loc; // TODO look at this.file.opts.filename if it works
     if (loc) {
@@ -11,8 +13,22 @@ function getLocation(node, srcName) {
         return srcName;
     }
 }
+/**
+ *
+ * @param pusher_identifier the identifer of the function used to log events
+ * @param current_file location of the current file
+ * @param parameters of the call
+ */
+exports.makeLoggerExprGen = (pusher_identifier) => (current_file, ...parameters) => {
+    return core_1.types.expressionStatement(core_1.types.callExpression(core_1.types.identifier(pusher_identifier), [
+        core_1.types.arrayExpression([
+            core_1.types.stringLiteral(current_file),
+            ...parameters,
+        ]),
+    ]));
+};
 function extendedPlugin({ types: t }, behaviorContext) {
-    const makeLoggerExpr = index_1.makeLoggerExprGen(behaviorContext.type === "browser" ? ';window.logger' : ';global.logger.push');
+    const makeLoggerExpr = exports.makeLoggerExprGen(behaviorContext.type === "browser" ? ';window.logger' : ';global.logger.push');
     return {
         pre(state) {
             this.counter = 0;

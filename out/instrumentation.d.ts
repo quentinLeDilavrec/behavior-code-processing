@@ -1,7 +1,8 @@
 import * as Babel from "@babel/core";
 import { SerializedLoc } from "./types";
 import { NodePath } from "@babel/traverse";
-import { BehaviorAnalysisContext, ExtendedPluginObj } from "./types";
+import { BehaviorAnalysisContext } from "./types";
+import { ExtendedPluginObj } from "./extended_pluginObj";
 export declare function constructNodejsPlugin<T>(pluginObjFct: ({ types: t }: typeof Babel, ctx: BehaviorAnalysisContext) => ExtendedPluginObj<T>, end_of_instrumentation?: (accumulator: Map<SerializedLoc, NodePath>) => void): (b: typeof Babel) => Babel.PluginObj<{
     store: (key: string, value: Babel.NodePath<Babel.types.Node>) => void;
 } & T>;

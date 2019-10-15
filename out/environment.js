@@ -19,7 +19,7 @@ const fs_1 = require("fs");
 const utils_1 = require("./utils");
 const jest_environment_jsdom_1 = __importDefault(require("jest-environment-jsdom"));
 /**
- *
+ * Get the index of the n-th occurrence of c in s. c and elements of s are compared with === operator.
  * @param s array explore
  * @param c searched element
  * @param n number of c elements to see  (n-1 c element will be ignored)
@@ -41,7 +41,6 @@ function nthOccIndex(s, c, n) {
     }
 }
 class BehaviorEnvironment extends jest_environment_jsdom_1.default {
-    // // eslint-disable-next-line no-useless-constructor
     constructor(config, x) {
         super(config, x);
         this.output_dir = config.output_dir;

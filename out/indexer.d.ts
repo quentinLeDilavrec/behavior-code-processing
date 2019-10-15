@@ -4,7 +4,12 @@ import { NodePath } from "@babel/traverse";
 import { TextDocument, Location, Uri, Range } from "vscode";
 import { SerializedLoc } from "./types";
 import * as Babel from "@babel/core";
-import { BehaviorAnalysisContext, ExtendedPluginObj } from "./types";
+import { BehaviorAnalysisContext } from "./types";
+import { ExtendedPluginObj } from "./extended_pluginObj";
+export declare function serializeNodePath(uri: Uri, path: NodePath): SerializedLoc;
+export declare function parseLoc(id: SerializedLoc): Location;
+export declare function serializeLoc(loc: Location): SerializedLoc;
+export declare function nodePath2Range(path: NodePath): Range;
 /**
  * Handle set of FileIndexers
  */
