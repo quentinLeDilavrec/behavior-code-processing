@@ -6,7 +6,7 @@
  */
 import { Config } from '@jest/types';
 import Environment from 'jest-environment-jsdom';
-export declare class BehaviorEnvironment extends Environment {
+export default class BehaviorEnvironment extends Environment {
     output_dir: string;
     testPath: string;
     constructor(config: {

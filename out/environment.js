@@ -79,5 +79,5 @@ class BehaviorEnvironment extends jest_environment_jsdom_1.default {
         return tmp;
     }
 }
-exports.BehaviorEnvironment = BehaviorEnvironment;
+exports.default = BehaviorEnvironment;
 //# sourceMappingURL=environment.js.map
