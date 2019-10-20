@@ -9,8 +9,10 @@ import Environment from 'jest-environment-jsdom';
 export default class BehaviorEnvironment extends Environment {
     output_dir: string;
     testPath: string;
+    rootDir: string;
     constructor(config: {
         output_dir: string;
+        root_dir: string;
     } & Config.ProjectConfig, context: any);
     setup(): Promise<void>;
     teardown(): Promise<void>;
