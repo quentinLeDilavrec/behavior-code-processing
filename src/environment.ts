@@ -6,7 +6,7 @@
  * External dependencies
  */
 import { Config } from '@jest/types';
-import { join, dirname } from 'path';
+import { join, dirname, relative } from 'path';
 import { writeFileSync, mkdirSync } from 'fs';
 import { call2String } from "./utils";
 import Environment from 'jest-environment-jsdom';
@@ -36,9 +36,11 @@ function nthOccIndex<T>(s: T[], c: T, n: number) {
 export default class BehaviorEnvironment extends Environment {
 	output_dir: string;
 	testPath: string;
-	constructor(config: { output_dir: string } & Config.ProjectConfig, context: any) {
+	rootDir: string;
+	constructor(config: { output_dir: string , root_dir: string } & Config.ProjectConfig, context: any) {
 		super(config, context);
-		this.testPath = context.testPath
+		this.testPath = context.testPath;
+		this.rootDir = config.root_dir;
 		this.output_dir = config.output_dir
 	}
 
@@ -51,7 +53,7 @@ export default class BehaviorEnvironment extends Environment {
 		if (this.global.logger.length > 0) {
 			// @ts-ignore
 			const testPath = (this.global && this.global.jasmine && this.global.jasmine.testPath) || this.testPath || ('' + Math.random());
-			const outPath = join(this.output_dir, testPath.slice(nthOccIndex(testPath, '/', 4) + 1));
+			const outPath = join(this.output_dir, relative(this.rootDir,testPath));
 			mkdirSync(dirname(outPath), { recursive: true });
 			writeFileSync(
 				outPath,
