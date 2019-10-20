@@ -34,10 +34,12 @@ function nthOccIndex<T>(s: T[], c: T, n: number) {
 }
 
 export class BehaviorEnvironment extends Environment {
-	output_dir:string;
-	constructor(config: {output_dir:string}&Config.ProjectConfig, x: any) {
-		super(config, x);
-		this.output_dir=config.output_dir
+	output_dir: string;
+	testPath: string;
+	constructor(config: { output_dir: string } & Config.ProjectConfig, context: any) {
+		super(config, context);
+		this.testPath = context.testPath
+		this.output_dir = config.output_dir
 	}
 
 	async setup() {
@@ -48,7 +50,7 @@ export class BehaviorEnvironment extends Environment {
 	async teardown() {
 		if (this.global.logger.length > 0) {
 			// @ts-ignore
-			const testPath = this.global.jasmine.testPath;
+			const testPath = (this.global && this.global.jasmine && this.global.jasmine.testPath) || this.testPath || ('' + Math.random());
 			const outPath = join(this.output_dir, testPath.slice(nthOccIndex(testPath, '/', 4) + 1));
 			mkdirSync(dirname(outPath), { recursive: true });
 			writeFileSync(
