@@ -33,7 +33,7 @@ function nthOccIndex<T>(s: T[], c: T, n: number) {
 	}
 }
 
-export class BehaviorEnvironment extends Environment {
+export default class BehaviorEnvironment extends Environment {
 	output_dir: string;
 	testPath: string;
 	constructor(config: { output_dir: string } & Config.ProjectConfig, context: any) {
