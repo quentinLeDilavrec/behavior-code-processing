@@ -113,5 +113,5 @@ function replacer(depth = Number.MAX_SAFE_INTEGER) {
  * @param depth of the serialization of parameters
  */
 export function call2String(call: InterceptedCall, depth = 0): string {
-  return '' + call[0] + (call.length > 1 ? ' ' + JSON.stringify(call.slice(1), replacer(depth)) : '');
+  return '' + call[0] + (call.length > 1 ? ' ' + JSON.stringify(call.slice(1), replacer(depth)) : '') + '\n';
 };

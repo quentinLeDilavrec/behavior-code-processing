@@ -40,8 +40,8 @@ export default class BehaviorEnvironment extends Environment {
 	constructor(config: { output_dir: string , root_dir: string } & Config.ProjectConfig, context: any) {
 		super(config, context);
 		this.testPath = context.testPath;
-		this.rootDir = config.root_dir;
-		this.output_dir = config.output_dir
+		this.rootDir = config.cwd;
+		this.output_dir = config.testEnvironmentOptions.output_dir;
 	}
 
 	async setup() {
@@ -51,9 +51,7 @@ export default class BehaviorEnvironment extends Environment {
 
 	async teardown() {
 		if (this.global.logger.length > 0) {
-			// @ts-ignore
-			const testPath = (this.global && this.global.jasmine && this.global.jasmine.testPath) || this.testPath || ('' + Math.random());
-			const outPath = join(this.output_dir, relative(this.rootDir,testPath));
+			const outPath = join(this.output_dir, relative(this.rootDir,this.testPath));
 			mkdirSync(dirname(outPath), { recursive: true });
 			writeFileSync(
 				outPath,
