@@ -41,8 +41,9 @@ function nthOccIndex(s, c, n) {
     }
 }
 class BehaviorEnvironment extends jest_environment_jsdom_1.default {
-    constructor(config, x) {
-        super(config, x);
+    constructor(config, context) {
+        super(config, context);
+        this.testPath = context.testPath;
         this.output_dir = config.output_dir;
     }
     setup() {
@@ -61,7 +62,7 @@ class BehaviorEnvironment extends jest_environment_jsdom_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.global.logger.length > 0) {
                 // @ts-ignore
-                const testPath = this.global.jasmine.testPath;
+                const testPath = (this.global && this.global.jasmine && this.global.jasmine.testPath) || this.testPath || ('' + Math.random());
                 const outPath = path_1.join(this.output_dir, testPath.slice(nthOccIndex(testPath, '/', 4) + 1));
                 fs_1.mkdirSync(path_1.dirname(outPath), { recursive: true });
                 fs_1.writeFileSync(outPath, this.global.logger.map(utils_1.call2String).join(''), 'utf-8');

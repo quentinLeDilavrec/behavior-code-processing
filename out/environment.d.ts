@@ -8,9 +8,10 @@ import { Config } from '@jest/types';
 import Environment from 'jest-environment-jsdom';
 export declare class BehaviorEnvironment extends Environment {
     output_dir: string;
+    testPath: string;
     constructor(config: {
         output_dir: string;
-    } & Config.ProjectConfig, x: any);
+    } & Config.ProjectConfig, context: any);
     setup(): Promise<void>;
     teardown(): Promise<void>;
     runScript(script: any): any;
