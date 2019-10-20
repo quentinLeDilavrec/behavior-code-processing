@@ -44,8 +44,8 @@ class BehaviorEnvironment extends jest_environment_jsdom_1.default {
     constructor(config, context) {
         super(config, context);
         this.testPath = context.testPath;
-        this.rootDir = config.root_dir;
-        this.output_dir = config.output_dir;
+        this.rootDir = config.cwd;
+        this.output_dir = config.testEnvironmentOptions.output_dir;
     }
     setup() {
         const _super = Object.create(null, {
@@ -62,9 +62,7 @@ class BehaviorEnvironment extends jest_environment_jsdom_1.default {
         });
         return __awaiter(this, void 0, void 0, function* () {
             if (this.global.logger.length > 0) {
-                // @ts-ignore
-                const testPath = (this.global && this.global.jasmine && this.global.jasmine.testPath) || this.testPath || ('' + Math.random());
-                const outPath = path_1.join(this.output_dir, path_1.relative(this.rootDir, testPath));
+                const outPath = path_1.join(this.output_dir, path_1.relative(this.rootDir, this.testPath));
                 fs_1.mkdirSync(path_1.dirname(outPath), { recursive: true });
                 fs_1.writeFileSync(outPath, this.global.logger.map(utils_1.call2String).join(''), 'utf-8');
                 this.global.logger = [];
