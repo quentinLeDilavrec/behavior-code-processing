@@ -1,5 +1,9 @@
 import * as Babel from "@babel/core";
-import { BehaviorAnalysisContext, ExtendedPluginObj } from "../index";
+import { NodePath } from "@babel/core";
+import { BehaviorAnalysisContext, ExtendedPluginObj, SerializedLoc } from "../index";
+export declare function constructNodejsPlugin<T>(pluginObjFct: ({ types: t }: typeof Babel, ctx: BehaviorAnalysisContext) => ExtendedPluginObj<T>, end_of_instrumentation?: (accumulator: Map<SerializedLoc, NodePath>) => void): (b: typeof Babel) => Babel.PluginObj<{
+    store: (key: string, value: Babel.NodePath<Babel.types.Node>) => void;
+} & T>;
 /**
  *
  * @param pusher_identifier the identifer of the function used to log events
